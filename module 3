@@ -1,0 +1,57 @@
+package ashwitha;
+import java.util.*;
+import java.util.concurrent.*;
+
+class Item {
+    String id, name;
+    int stock, reorderLevel;
+
+    Item(String id, String name, int stock, int reorderLevel) {
+        this.id = id;
+        this.name = name;
+        this.stock = stock;
+        this.reorderLevel = reorderLevel;
+    }
+
+    boolean needsReorder() {
+        return stock <= reorderLevel;
+    }
+}
+
+class GenericInventory<T> {
+    private List<T> items = new ArrayList<>();
+    void addItem(T item) { items.add(item); }
+    List<T> getItems() { return items; }
+}
+
+class StockCheckerTask implements Runnable {
+    private Item item;
+
+    StockCheckerTask(Item item) {
+        this.item = item;
+    }
+
+    public void run() {
+        if (item.needsReorder())
+            System.out.println(Thread.currentThread().getName() + ": " + item.name + " needs reorder!");
+        else
+            System.out.println(Thread.currentThread().getName() + ": " + item.name + " stock is sufficient.");
+    }
+}
+
+public class InventoryThreadDemo {
+    public static void main(String[] args) {
+        GenericInventory<Item> inventory = new GenericInventory<>();
+
+        inventory.addItem(new Item("I101", "Mouse", 2, 5));
+        inventory.addItem(new Item("I102", "Keyboard", 8, 4));
+        inventory.addItem(new Item("I103", "Monitor", 1, 3));
+        inventory.addItem(new Item("I104", "Printer", 7, 6));
+
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        for (Item i : inventory.getItems())
+            executor.execute(new StockCheckerTask(i));
+
+        executor.shutdown();
+    }
+}
