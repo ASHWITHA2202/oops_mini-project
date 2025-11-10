@@ -1,0 +1,38 @@
+package ashwitha;
+public class ProductDemo {
+
+    static class Product {
+        String id, name;
+        int stock, reorderLevel;
+
+        Product(String id, String name, int stock, int reorderLevel) {
+            this.id = id;
+            this.name = name;
+            this.stock = stock;
+            this.reorderLevel = reorderLevel;
+        }
+
+        boolean needsReorder() {
+            return stock <= reorderLevel;
+        }
+
+        void showDetails() {
+            System.out.println(id + " - " + name + " (Stock: " + stock + ")");
+        }
+    }
+
+    public static void main(String[] args) {
+        Product p1 = new Product("P101", "Mouse", 2, 5);
+        Product p2 = new Product("P102", "Keyboard", 10, 5);
+        Product p3 = new Product("P103", "Monitor", 3, 4);
+
+        p1.showDetails();
+        p2.showDetails();
+        p3.showDetails();
+
+        System.out.println("\nReorder Check:");
+        System.out.println(p1.name + " needs reorder? " + p1.needsReorder());
+        System.out.println(p2.name + " needs reorder? " + p2.needsReorder());
+        System.out.println(p3.name + " needs reorder? " + p3.needsReorder());
+    }
+}
