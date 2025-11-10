@@ -1,0 +1,36 @@
+package PROJECT;
+import java.sql.*;
+
+public class MODULE4 {
+    public static void main(String[] args) {
+        Connection conn = null;
+        try {
+            // Step 1: Load driver (optional in modern Java)
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String url = "jdbc:mysql://localhost:3306/inventorydb";
+            String user = "root";
+            String pass = "al191102";
+
+            conn = DriverManager.getConnection(url, user, pass);
+            System.out.println("Connected to Database.");
+
+            // Step 3: Execute query
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM products;");
+
+
+            // Step 4: Display result
+            while (rs.next()) {
+                System.out.println("Product: " + rs.getString("name") + " | Stock: " + rs.getInt("stock"));
+            }
+
+            // Step 5: Close connection
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
